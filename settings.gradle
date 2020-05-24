@@ -1,0 +1,3 @@
+rootProject.name = 'clean-demo-debt-notes'
+include 'domain'
+
