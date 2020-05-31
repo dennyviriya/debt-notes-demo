@@ -1,18 +1,12 @@
-package domain.data
+package interface_adapter
 
+import domain.usecase.port.GenericRepository
 import java.util.concurrent.atomic.AtomicLong
 
-interface GenericRepository<V> {
-    fun add(value: V)
-    fun add(id: Long, value: V)
-    fun remove(id: Long)
-    fun get(id: Long): V
-    fun find(predicate: (V) -> Boolean): List<V>
-}
-
-open class InMemoryRepository<V> : GenericRepository<V> {
+open class GenericInMemoryRepository<V> : GenericRepository<V> {
     protected val map: MutableMap<Long, V> = mutableMapOf()
-    protected val atomicLong: AtomicLong = AtomicLong()
+    protected val atomicLong: AtomicLong =
+        AtomicLong()
 
     override fun add(value: V) {
         map[atomicLong.incrementAndGet()] = value

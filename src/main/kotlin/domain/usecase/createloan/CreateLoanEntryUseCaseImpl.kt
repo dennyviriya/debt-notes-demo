@@ -1,6 +1,6 @@
 package domain.usecase.createloan
 
-import domain.data.LoanRepository
+import domain.usecase.port.LoanRepository
 import domain.entity.Loan
 import domain.usecase.port.SimplePresenter
 import java.util.Date

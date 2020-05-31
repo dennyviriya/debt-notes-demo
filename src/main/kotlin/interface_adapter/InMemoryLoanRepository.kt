@@ -1,13 +1,9 @@
-package domain.data
+package interface_adapter
 
 import domain.entity.Loan
+import domain.usecase.port.LoanRepository
 
-interface LoanRepository : GenericRepository<Loan> {
-    fun getAllLoans(): List<Loan>
-    fun getLoanFrom(borrowerId: Long): List<Loan>
-}
-
-class InMemoryLoanRepository: LoanRepository, InMemoryRepository<Loan>() {
+class InMemoryLoanRepository: LoanRepository, GenericInMemoryRepository<Loan>() {
     override fun getAllLoans(): List<Loan> {
         return map.values.toList()
     }
