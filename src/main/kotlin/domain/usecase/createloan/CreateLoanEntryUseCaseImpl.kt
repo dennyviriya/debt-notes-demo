@@ -22,17 +22,18 @@ class CreateLoanEntryUseCaseImpl(
         }
     }
 
+    @Throws(Exception::class)
     private fun makeLoan(loanInformation: LoanInformation) {
         val (borrowerId, lenderId, amount, description) = loanInformation
 
-        val loan = Loan(
+        val loanEntry = Loan(
             desc = description,
             amount = amount,
             borrowerId = borrowerId,
             lenderId = lenderId,
             timeStamp = now
         )
-        repository.add(loan)
+        repository.add(loanEntry)
     }
 }
 

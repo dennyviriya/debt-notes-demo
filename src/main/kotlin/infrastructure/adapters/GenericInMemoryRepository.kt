@@ -1,4 +1,4 @@
-package interface_adapter
+package infrastructure.adapters
 
 import domain.usecase.port.GenericRepository
 import java.util.concurrent.atomic.AtomicLong

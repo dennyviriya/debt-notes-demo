@@ -1,9 +1,9 @@
-package interface_adapter
+package infrastructure.adapters
 
 import domain.entity.Loan
 import domain.usecase.port.LoanRepository
 
-class InMemoryLoanRepository: LoanRepository, GenericInMemoryRepository<Loan>() {
+open class InMemoryLoanRepository: LoanRepository, GenericInMemoryRepository<Loan>() {
     override fun getAllLoans(): List<Loan> {
         return map.values.toList()
     }
