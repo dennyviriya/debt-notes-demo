@@ -1,5 +1,7 @@
 package domain.usecase.createloan
 
+import domain.usecase.CreateLoanEntryUseCaseImpl
+import domain.usecase.LoanInformation
 import org.hamcrest.CoreMatchers.hasItems
 import org.junit.After
 import org.junit.Assert.assertThat
@@ -15,7 +17,8 @@ class CreateLoanEntryUseCaseImplTest {
     fun setUp() {
         fakeLoanRepository = FakeInMemoryLoanRepository()
         spySimplePresenter = SpySimplePresenter()
-        createLoanEntryUseCase = CreateLoanEntryUseCaseImpl(fakeLoanRepository, spySimplePresenter)
+        createLoanEntryUseCase =
+            CreateLoanEntryUseCaseImpl(fakeLoanRepository, spySimplePresenter)
     }
 
     @After

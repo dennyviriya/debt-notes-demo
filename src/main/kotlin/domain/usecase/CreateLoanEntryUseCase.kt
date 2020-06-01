@@ -1,9 +1,13 @@
-package domain.usecase.createloan
+package domain.usecase
 
-import domain.usecase.port.LoanRepository
 import domain.entity.Loan
+import domain.usecase.port.LoanRepository
 import domain.usecase.port.SimplePresenter
 import java.util.Date
+
+interface CreateLoanEntryUseCase {
+    operator fun invoke(loanInformation: LoanInformation)
+}
 
 class CreateLoanEntryUseCaseImpl(
     private val repository: LoanRepository,
@@ -37,3 +41,9 @@ class CreateLoanEntryUseCaseImpl(
     }
 }
 
+data class LoanInformation(
+    val borrowerId: Long,
+    val lenderId: Long,
+    val amount: Long,
+    val description: String
+)
