@@ -3,7 +3,7 @@ package domain.entity
 import java.util.Date
 
 class Loan(
-    val id: LoanId? = null,
+    val id: Long? = null,
     val desc: String,
     val amount: Long,
     val borrowerId: Long,
@@ -16,5 +16,3 @@ class Loan(
         require(borrowerId > 0)
     }
 }
-
-inline class LoanId(val value: Long)

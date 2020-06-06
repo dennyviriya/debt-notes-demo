@@ -1,9 +1,10 @@
-package domain.usecase.createloan
+package domain.usecase
 
 import domain.usecase.CreateLoanEntryUseCaseImpl
 import domain.usecase.LoanInformation
+import domain.usecase.fakes.FakeInMemoryLoanRepository
+import domain.usecase.fakes.SpySimplePresenter
 import org.hamcrest.CoreMatchers.hasItems
-import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -19,10 +20,6 @@ class CreateLoanEntryUseCaseImplTest {
         spySimplePresenter = SpySimplePresenter()
         createLoanEntryUseCase =
             CreateLoanEntryUseCaseImpl(fakeLoanRepository, spySimplePresenter)
-    }
-
-    @After
-    fun tearDown() {
     }
 
     private val loanInformation = LoanInformation(

@@ -1,4 +1,4 @@
-package domain.usecase.createloan
+package domain.usecase.fakes
 
 import domain.entity.Loan
 import infrastructure.adapters.InMemoryLoanRepository
