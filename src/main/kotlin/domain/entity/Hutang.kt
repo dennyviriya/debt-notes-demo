@@ -3,20 +3,14 @@ package domain.entity
 import java.util.Date
 
 class Hutang(
-    val id: Long,
-    val idCatatanHutang: Long,
+    val id: Long? = null,
+    val catatanHutangId: Long,
     val deskripsi: String,
     val jumlahPinjaman: Long,
-    val tanggalPinjam: Date
-) {
+    private val tanggalPinjam: Date,
     private val pembayaran: MutableList<Pembayaran> = mutableListOf()
-
-    fun lunasiHutang() {
-        pembayaran.add(
-            Pembayaran(jumlahPinjaman, Date())
-        )
-    }
-
+) {
+    @Throws(IllegalArgumentException::class)
     fun bayarHutang(jumlah: Long) {
         require(jumlah > 0)
         pembayaran.add(
@@ -24,18 +18,28 @@ class Hutang(
         )
     }
 
+    fun lunasiHutang() {
+        pembayaran.add(
+            Pembayaran(jumlahPinjaman, Date())
+        )
+    }
+
     fun sisaHutang(): Long =
         jumlahPinjaman + pembayaran.map { it.jumlah }.sum()
 
-    fun statusHutang(): String =
+    fun statusHutang(): StatusHutang =
         sisaHutang().let { sisa ->
             when {
                 sisa < 0L -> throw IllegalStateException("sisa hutang tidak boleh minus")
-                sisa == 0L -> "lunas"
-                sisa > 0L -> "belum lunas"
-                else -> ""
+                sisa == 0L -> StatusHutang.LUNAS
+                sisa > 0L -> StatusHutang.BELUM_LUNAS
+                else -> throw Exception()
             }
         }
+
+    fun riwayatPembayaran(): List<Pembayaran> = pembayaran
 }
 
 data class Pembayaran(val jumlah: Long, val date: Date)
+
+enum class StatusHutang { LUNAS, BELUM_LUNAS; }
