@@ -30,7 +30,7 @@ class BuatHutangBaruUseCaseImpl(
             requireNotNull(customerMitra)
 
             val newHutang = customerMitra.buatHutangBaru(param.amount, param.desc)
-            val newId = genericRepository.add<Hutang>(Hutang::class.java.canonicalName, newHutang)
+            val newId = genericRepository.add(Hutang::class.java.canonicalName, newHutang)
 
             presenter.onHutangCreated(
                 HutangCreatedResponseModel(newId, newHutang.jumlahPinjaman, newHutang.deskripsi)
