@@ -2,22 +2,23 @@ package domain.entity
 
 import java.util.*
 
-class CatatanHutang(
+// Entity
+class CustomerMitra(
     val id: Long,
     val mitraId: Long,
-    val customerId: Long,
-    private val transaksi: MutableList<Hutang> = mutableListOf()
+    val nama: String,
+    val nomorHp: String,
+    val transaksi: MutableList<Hutang> = mutableListOf()
 ) {
-    fun buatHutangBaru(jumlahPinjaman: Long, deskripsi: String) {
-        transaksi.add(
-            Hutang(
-                id = null,
-                catatanHutangId = id,
-                deskripsi = deskripsi,
-                jumlahPinjaman = jumlahPinjaman,
-                tanggalPinjam = Date()
-            )
+    fun buatHutangBaru(jumlahPinjaman: Long, deskripsi: String): Hutang {
+        val newHutang = Hutang(
+            id = null,
+            deskripsi = deskripsi,
+            jumlahPinjaman = jumlahPinjaman,
+            tanggalPinjam = Date()
         )
+        transaksi.add(newHutang)
+        return newHutang
     }
 
     fun listHutangBelumLunas(): List<Hutang> =

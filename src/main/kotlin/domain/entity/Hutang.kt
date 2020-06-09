@@ -2,14 +2,18 @@ package domain.entity
 
 import java.util.Date
 
+// Entity
 class Hutang(
     val id: Long? = null,
-    val catatanHutangId: Long,
     val deskripsi: String,
     val jumlahPinjaman: Long,
-    private val tanggalPinjam: Date,
+    val tanggalPinjam: Date = Date(),
     private val pembayaran: MutableList<Pembayaran> = mutableListOf()
 ) {
+    init {
+        require(jumlahPinjaman > 0)
+    }
+
     @Throws(IllegalArgumentException::class)
     fun bayarHutang(jumlah: Long) {
         require(jumlah > 0)
@@ -25,7 +29,7 @@ class Hutang(
     }
 
     fun sisaHutang(): Long =
-        jumlahPinjaman + pembayaran.map { it.jumlah }.sum()
+        jumlahPinjaman - pembayaran.map { it.jumlah }.sum()
 
     fun statusHutang(): StatusHutang =
         sisaHutang().let { sisa ->
