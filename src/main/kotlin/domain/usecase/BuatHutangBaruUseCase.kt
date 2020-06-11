@@ -7,7 +7,7 @@ import domain.entity.Hutang
 interface BuatHutangBaruUseCase {
     operator fun invoke(param: Param)
 
-    // Request Model
+    // Request Model, this can also be simple data structure like Map (or Hash in ruby)
     data class Param(
         val mitraId: Long,
         val customerMitraId: Long,
@@ -16,7 +16,7 @@ interface BuatHutangBaruUseCase {
     )
 }
 
-// Interactor
+// Interactor or UseCase Implementation
 class BuatHutangBaruUseCaseImpl(
     private val genericRepository: GenericRepository,
     private val presenter: Presenter
@@ -47,7 +47,7 @@ interface Presenter {
     fun onFailCreateHutang(exception: Exception)
 }
 
-// Response Model
+// Response Model, this can also be simple data structure like Map (or Hash in ruby)
 data class HutangCreatedResponseModel(
     val hutangId: Long,
     val jumlah: Long,

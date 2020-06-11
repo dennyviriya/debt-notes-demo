@@ -2,16 +2,16 @@ package infrastructure.ktor_framework
 
 import domain.entity.CustomerMitra
 import domain.entity.Mitra
-import domain.usecase.BuatHutangBaruUseCase
+import domain.usecase.BuatHutangBaruUseCase.Param
 import domain.usecase.BuatHutangBaruUseCaseImpl
 import infrastructure.adapters.JsonPresenter
+import infrastructure.adapters.JsonPresenter.ViewModel
 import infrastructure.gateway.InMemoryMitraRepository
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.HttpStatusCode.Companion
 import io.ktor.request.receiveParameters
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -37,18 +37,22 @@ fun main(args: Array<String>) {
             post("/debt") {
                 val param = call.receiveParameters()
 
-                var mitraId: Long? = null
-                var customerMitraId: Long? = null
-                var amount: Long? = null
-                var description: String? = null
+                var useCaseParam: Param? = null
 
                 // You can also verify this in entity, but thats another thing to research.
                 // IMO, if you verify bad input early, you can save more performance
                 try {
-                    mitraId = param["mitra-id"]!!.toLong()
-                    customerMitraId = param["customer-mitra-id"]!!.toLong()
-                    amount = param["amount"]!!.toLong()
-                    description = param["desc"].orEmpty()
+                    val mitraId = param["mitra-id"]!!.toLong()
+                    val customerMitraId = param["customer-mitra-id"]!!.toLong()
+                    val amount = param["amount"]!!.toLong()
+                    val description = param["desc"].orEmpty()
+
+                    useCaseParam = Param(
+                        mitraId = mitraId,
+                        customerMitraId = customerMitraId,
+                        amount = amount,
+                        desc = description
+                    )
                 } catch (e: NullPointerException) {
                     call.respondText(
                         text = "There is missing required parameter",
@@ -60,27 +64,16 @@ fun main(args: Array<String>) {
                         status = HttpStatusCode.UnprocessableEntity
                     )
                 } finally {
-                    require(mitraId != null)
-                    require(customerMitraId != null)
-                    require(amount != null)
+                    require(useCaseParam != null)
                 }
 
                 // This is how to do manual Dependency Injection
-                val viewModel = JsonPresenter.ViewModel()
-                val presenter = JsonPresenter(viewModel)
-                val useCase = BuatHutangBaruUseCaseImpl(InMemoryMitraRepository, presenter)
+                val viewModel: ViewModel = ViewModel()
+                val presenter: JsonPresenter = JsonPresenter(viewModel)
+                val useCase: BuatHutangBaruUseCaseImpl = BuatHutangBaruUseCaseImpl(InMemoryMitraRepository, presenter)
 
-                useCase.invoke(
-                    BuatHutangBaruUseCase.Param(
-                        mitraId = mitraId,
-                        customerMitraId = customerMitraId,
-                        amount = amount,
-                        desc = description.orEmpty()
-                    )
-                )
-
-                // take viewmodel.value, if it is null, take viewmodel.error
-                call.respondText(viewModel.value ?: viewModel.error.toString())
+                useCase.invoke(useCaseParam)
+                call.respondText(viewModel.toString())
             }
         }
     }
