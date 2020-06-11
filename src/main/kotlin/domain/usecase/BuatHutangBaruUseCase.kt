@@ -1,7 +1,6 @@
 package domain.usecase
 
 import domain.entity.CustomerMitra
-import domain.entity.Hutang
 
 // Input Boundary / Input Port
 interface BuatHutangBaruUseCase {
@@ -24,13 +23,13 @@ class BuatHutangBaruUseCaseImpl(
     override fun invoke(param: BuatHutangBaruUseCase.Param) {
         try {
             val customerMitra =
-                genericRepository.find<CustomerMitra>(CustomerMitra::class.java.canonicalName) { customerMitra ->
+                genericRepository.find(CustomerMitra::class) { customerMitra ->
                     customerMitra.id == param.customerMitraId && customerMitra.mitraId == param.mitraId
                 }
             requireNotNull(customerMitra)
 
             val newHutang = customerMitra.buatHutangBaru(param.amount, param.desc)
-            val newId = genericRepository.add(Hutang::class.java.canonicalName, newHutang)
+            val newId = genericRepository.add(newHutang)
 
             presenter.onHutangCreated(
                 HutangCreatedResponseModel(newId, newHutang.jumlahPinjaman, newHutang.deskripsi)

@@ -83,14 +83,12 @@ fun main(args: Array<String>) {
 
 private fun seed() {
     InMemoryMitraRepository.add(
-        Mitra::class.java.canonicalName,
         Mitra(
             1, "denny", emptyList()
         )
     )
 
     InMemoryMitraRepository.add(
-        CustomerMitra::class.java.canonicalName,
         CustomerMitra(
             1, 1, "bangkit", "0812-1234-1234"
         )

@@ -2,13 +2,15 @@ package infrastructure.gateway
 
 import domain.usecase.GenericRepository
 import java.util.concurrent.atomic.AtomicLong
+import kotlin.reflect.KClass
 
 open class GenericInMemoryRepository : GenericRepository {
     protected val typeMap: MutableMap<String, MutableMap<Long, Any>> = mutableMapOf()
     protected val atomicLong: AtomicLong = AtomicLong()
 
 
-    override fun <V : Any> add(type: String, value: V): Long {
+    override fun <V : Any> add(value: V): Long {
+        val type =  value::class.java.canonicalName
         if (typeMap.containsKey(type).not())
             typeMap[type] = mutableMapOf()
 
@@ -17,8 +19,9 @@ open class GenericInMemoryRepository : GenericRepository {
         return assignedId
     }
 
-    override fun <V : Any> find(type: String, predicate: (V) -> Boolean): V? {
-        return typeMap[type]?.values?.toList()?.find {
+    override fun <V: Any> find(type: KClass<V>, predicate: (V) -> Boolean): V? {
+        val javaType = type.java.canonicalName
+        return typeMap[javaType]?.values?.toList()?.find {
             predicate(it as V)
         } as? V
     }
