@@ -17,6 +17,7 @@ interface BuatHutangBaruUseCase {
 
 // Interactor or UseCase Implementation
 class BuatHutangBaruUseCaseImpl(
+    // a proper approach would be using Unit of Work Pattern since I'm using Domain Driven Design approach
     private val genericRepository: GenericRepository,
     private val presenter: Presenter
 ) : BuatHutangBaruUseCase {

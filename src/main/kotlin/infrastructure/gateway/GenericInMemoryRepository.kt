@@ -5,23 +5,23 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.reflect.KClass
 
 open class GenericInMemoryRepository : GenericRepository {
-    protected val typeMap: MutableMap<String, MutableMap<Long, Any>> = mutableMapOf()
+    protected val storage: MutableMap<Int, MutableMap<Long, Any>> = mutableMapOf()
     protected val atomicLong: AtomicLong = AtomicLong()
 
 
     override fun <V : Any> add(value: V): Long {
-        val type =  value::class.java.canonicalName
-        if (typeMap.containsKey(type).not())
-            typeMap[type] = mutableMapOf()
+        val itemType: Int = value::class.hashCode()
+        if (storage.containsKey(itemType).not())
+            storage[itemType] = mutableMapOf()
 
         val assignedId = atomicLong.incrementAndGet()
-        typeMap[type]?.put(assignedId, value)
+        storage[itemType]?.put(assignedId, value)
         return assignedId
     }
 
-    override fun <V: Any> find(type: KClass<V>, predicate: (V) -> Boolean): V? {
-        val javaType = type.java.canonicalName
-        return typeMap[javaType]?.values?.toList()?.find {
+    override fun <V : Any> find(type: KClass<V>, predicate: (V) -> Boolean): V? {
+        val itemType: Int = type.hashCode()
+        return storage[itemType]?.values?.toList()?.find {
             predicate(it as V)
         } as? V
     }
